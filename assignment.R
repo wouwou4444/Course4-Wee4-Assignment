@@ -58,3 +58,38 @@ plot(names(total_emission_by_year_balt),
      ylim = c(0,4000),
      pch = 19,
      lwd = 5)
+
+#### Question 3
+names(NEI)
+
+NEI_baltimore <- subset(NEI,fips == 24510 & year %in% c(1999, 2008))
+dim(NEI_baltimore)
+table(NEI_baltimore$year)
+head(table(NEI_baltimore$SCC, NEI_baltimore$year), 100)
+
+# with base system
+total_emission_by_year_balt <- tapply(NEI_baltimore$Emissions, 
+                                      INDEX = list(NEI_baltimore$type, NEI_baltimore$year),
+                                      sum)
+# total_emission_by_year_balt <- tapply(NEI_baltimore$Emissions, 
+#                                       INDEX = list(NEI_baltimore$year, NEI_baltimore$type),
+#                                       sum)
+
+library(reshape2)
+library(ggplot2)
+dcast(total_emission_by_year_balt)
+total_emission_by_year_balt
+
+df_baltimore <- melt(total_emission_by_year_balt, id=c("1999","2008"))
+names(df_baltimore) <- c("type", "year", "emission")
+
+
+ggplot(as.data.frame(df_baltimore), 
+       aes(x= year, y = emission,
+           colour = type), 
+       xlab = "year",
+       ylab="Emissions"     ) + 
+  labs(title = "Total Emissions by source type in Baltimore(1999,2008)") +
+  geom_line() +
+  theme_minimal() + 
+  theme(plot.title = element_text(size = 14, color = "red" ))
