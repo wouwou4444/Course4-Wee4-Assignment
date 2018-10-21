@@ -39,3 +39,22 @@ par(mar=c(0.2,4,0.2,4))
 #   theme_minimal()+
 #   stat_summary(fun.y = sum, na.rm = TRUE, geom ='point')
 
+#### Question 2
+names(NEI)
+
+NEI_baltimore <- subset(NEI,fips == 24510 & year %in% c(1999, 2008))
+dim(NEI_baltimore)
+table(NEI_baltimore$year)
+head(table(NEI_baltimore$SCC, NEI_baltimore$year), 100)
+
+# with base system
+total_emission_by_year_balt <- tapply(NEI_baltimore$Emissions, NEI_baltimore$year, sum)
+total_emission_by_year_balt
+plot(names(total_emission_by_year_balt), 
+     total_emission_by_year_balt, 
+     main = "Total Emissions in Baltimore(1999,2008)",
+     xlab = "year",
+     ylab="Emissions",
+     ylim = c(0,4000),
+     pch = 19,
+     lwd = 5)
