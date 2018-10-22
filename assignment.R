@@ -161,7 +161,7 @@ ggplot(df_baltimore, aes(x=year, y=emissions)) +
   geom_line() + 
   theme_minimal() +
   ylim(0,400) +
-  ylab("Total Emissions(thousands)") +
+  ylab("Total Emissions") +
   labs(title="Emissions in Balt for Motor Vehicle") 
 dev.off()
 
@@ -173,34 +173,42 @@ dev.off()
 # Mobile - On-Road
 names(NEI)
 names(SCC)
-NEI_baltimore <- subset(NEI,fips == 24510 & year %in% c(1999, 2008))
-dim(NEI_baltimore)
-table(NEI_baltimore$year)
-head(table(NEI_baltimore$SCC, NEI_baltimore$year), 100)
+NEI_baltimore_losangeles <- subset(NEI,fips %in% c("24510","06037") & year %in% c(1999, 2008))
+# NEI_baltimore_losangeles <- subset(NEI,fips == "24510" )
+dim(NEI_baltimore_losangeles)
+table(NEI_baltimore_losangeles$year, NEI_baltimore_losangeles$fips)
 
 indices <- grep(pattern = "Mobile - On-Road", x= SCC$EI.Sector, ignore.case = TRUE)
 SCC_motor_vehicle <- SCC[indices,]
 
 # Merge/Join
-NEI_baltimore_motor_vehicle <- merge(NEI_baltimore, SCC_motor_vehicle, by = "SCC")
-dim(NEI_baltimore_motor_vehicle)
-table(NEI_baltimore_motor_vehicle$year)
+NEI_baltimore_losangeles_motor_vehicle <- merge(NEI_baltimore_losangeles, SCC_motor_vehicle, by = "SCC")
+dim(NEI_baltimore_losangeles_motor_vehicle)
+table(NEI_baltimore_losangeles_motor_vehicle$year, NEI_baltimore_losangeles_motor_vehicle$fips)
 
 # compute total emission for baltimore by year and source type
-total_emission_by_year_balt_motor_vehicle <- tapply(NEI_baltimore_motor_vehicle$Emissions, 
-                                                    INDEX = list(NEI_baltimore_motor_vehicle$year),
-                                                    sum)
+total_emission_by_year_balt_la_motor_vehicle <- data.frame(tapply(NEI_baltimore_losangeles_motor_vehicle$Emissions, 
+                                                    INDEX = list(NEI_baltimore_losangeles_motor_vehicle$fips,
+                                                                 NEI_baltimore_losangeles_motor_vehicle$year
+                                                                 ),
+                                                    sum))
 
-df_baltimore <- melt(total_emission_by_year_balt_motor_vehicle, id=c("1999","2008"))
-names(df_baltimore) <- c("year", "emissions")
+total_emission_by_year_balt_la_motor_vehicle$city <- rownames(total_emission_by_year_balt_la_motor_vehicle)
+colnames(total_emission_by_year_balt_la_motor_vehicle) <- c('1999','2008','city')
 
-dev.copy(png, file = "plot5.png")
-ggplot(df_baltimore, aes(x=year, y=emissions)) +
-  geom_line() + 
+df_baltimore_la <- melt(total_emission_by_year_balt_la_motor_vehicle, id=c("city"))
+df_baltimore_la <- melt(total_emission_by_year_balt_la_motor_vehicle, id=c("city"), 
+                        measure.vars = c("1999","2008"), 
+                        value.name = "emission")
+names(df_baltimore_la) <- c("city","year", "emissions")
+
+dev.copy(png, file = "plot6.png")
+ggplot(df_baltimore_la, aes(x=year, y=emissions, colour = city)) +
+  geom_line(aes(group = city)) + 
   theme_minimal() +
-  ylim(0,400) +
-  ylab("Total Emissions(thousands)") +
-  labs(title="Emissions in Balt for Motor Vehicle") 
+  ylim(0,4200) +
+  ylab("Total Emissions") +
+  labs(title="Emissions Balt vs LA for Motor Vehicle") 
 dev.off()
 
 
