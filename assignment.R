@@ -43,6 +43,21 @@ dev.off()
 ##########################################################
 ##########################################################
 ####            Question 2
+
+### Download data
+sourcefile <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip"
+destfile <- "./dataEPA.zip"
+
+getwd()
+download.file(url = sourcefile, destfile = destfile)
+unzip(destfile)
+
+dir(getwd())
+
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+#########################################################
+
 names(NEI)
 
 # subset data for Baltimore city
@@ -71,6 +86,20 @@ dev.off()
 ####              Question 3
 library(ggplot2)
 library(reshape2)
+
+### Download data
+sourcefile <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip"
+destfile <- "./dataEPA.zip"
+
+getwd()
+download.file(url = sourcefile, destfile = destfile)
+unzip(destfile)
+
+dir(getwd())
+
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+#########################################################
 
 names(NEI)
 
@@ -106,6 +135,23 @@ dev.off()
 ##########################################################
 ##########################################################
 ############         Question 4
+library(ggplot2)
+library(reshape2)
+
+### Download data
+sourcefile <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip"
+destfile <- "./dataEPA.zip"
+
+getwd()
+download.file(url = sourcefile, destfile = destfile)
+unzip(destfile)
+
+dir(getwd())
+
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+#########################################################
+
 # Based on section 5 of https://www.epa.gov/sites/production/files/2015-07/documents/aerr_final_rule.pdf
 # we can assume that EI.sector contain the information on Fuel combustion *** coal
 indices_coal <- grep(pattern = "fuel.*coal", x = SCC$EI.Sector, ignore.case = TRUE)
@@ -130,6 +176,22 @@ dev.off()
 ##########################################################
 ##########################################################
 ###########    Question 5
+library(ggplot2)
+library(reshape2)
+
+### Download data
+sourcefile <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip"
+destfile <- "./dataEPA.zip"
+
+getwd()
+download.file(url = sourcefile, destfile = destfile)
+unzip(destfile)
+
+dir(getwd())
+
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+#########################################################
 
 ## motor vehicle selection is based on on-road vehicles
 # Mobile - On-Road
@@ -168,6 +230,22 @@ dev.off()
 ##########################################################
 ##########################################################
 ###########    Question 6
+library(ggplot2)
+library(reshape2)
+
+### Download data
+sourcefile <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip"
+destfile <- "./dataEPA.zip"
+
+getwd()
+download.file(url = sourcefile, destfile = destfile)
+unzip(destfile)
+
+dir(getwd())
+
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+#########################################################
 
 ## motor vehicle selection is based on on-road vehicles
 # Mobile - On-Road
