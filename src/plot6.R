@@ -61,3 +61,35 @@ ggplot(df_baltimore_la, aes(x=year, y=emissions, colour = city)) +
 dev.off()
 
 
+#################
+# Other solution based on tidyverse
+install.packages("tidyverse")
+
+library(tidyverse)
+
+url <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip"
+NEI.filename <- "summarySCC_PM25.rds"
+SCC.filename <- "Source_Classification_Code.rds"
+
+if (!NEI.filename %in% dir() | !SCC.filename %in% dir()) {
+  download.file(url, destfile = "data.zip")
+  unzip("data.zip")
+}
+
+NEI <- readRDS(NEI.filename)
+
+emissions <- NEI %>%
+  filter(fips %in% c("24510","06037"), type == "ON-ROAD") %>%
+  group_by(year, fips) %>%
+  summarise(total = sum(Emissions)) %>%
+  spread(year, total)
+
+change.balt <- with(filter(emissions, fips == "24510"), `2008` - `1999`)
+change.la <- with(filter(emissions, fips == "06037"), `2008` - `1999`)
+changes <- c(Baltimore = change.balt, LA = change.la)
+
+png(filename="plot6.png")
+barplot(changes, 
+        ylab = "Change in Emissions (tons)", 
+        main = "Change in Motor Vehicle Emissions from 1999 to 2008")
+dev.off()

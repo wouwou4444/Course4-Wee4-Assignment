@@ -38,3 +38,19 @@ ggplot(NEI_1999_2008_coal, aes(x=year, y=Emissions/1000)) +
   labs(title="Emissions in USA for Combustion Fuel based on coal") +
   stat_summary(fun.y = sum, geom ='line')
 dev.off()
+
+
+#### OTher solutions or submissions
+
+NEI <- readRDS("SummarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+# Plot total PM25 emissions from coal combustion-related sources for the years 1999, 2002, 2005 and 2008
+combsubset <- SCC[grepl("Comb", SCC$EI.Sector),]
+coalcombsubset <- combsubset[grepl("Coal",combsubset$EI.Sector),]
+both <- intersect(NEI$SCC,coalcombsubset$SCC)
+coalsubset <- subset(NEI, SCC %in% both)
+totalcoalbyyear <- aggregate(Emissions ~ year, coalsubset, sum)
+barplot(height = totalcoalbyyear$Emissions, names.arg = totalcoalbyyear$year,xlab= "Year", ylab="PM2.5 Emissions in Tons")
+title(main="Coal Combustion-Related Emissions in the U.S.")
+dev.copy(png, file= "plot4.png")
+dev.off()
